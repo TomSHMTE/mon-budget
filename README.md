@@ -16,3 +16,8 @@ Remplace les fichiers dans le dépôt (Add file > Upload files, « Commit change
 
 ## Sauvegarde
 Engrenage > *Exporter une sauvegarde* (fichier .json) / *Importer une sauvegarde*.
+
+## APK Android
+Chaque envoi sur `main` construit automatiquement l'APK (onglet Actions) et le publie ici :
+`https://github.com/TomSHMTE/mon-budget/releases/latest/download/mon-budget.apk`
+(même clé de signature à chaque version : on installe par-dessus, les données sont conservées.)

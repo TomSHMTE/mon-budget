@@ -1,0 +1,32 @@
+name: Construire l'APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+      - name: Copier l'appli web dans l'APK
+        run: |
+          mkdir -p android/app/src/main/assets
+          cp index.html app.js lib.js styles.css android/app/src/main/assets/
+      - name: Compiler
+        run: cd android && gradle assembleDebug --no-daemon
+      - name: Publier l'APK (lien fixe)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk mon-budget.apk
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest mon-budget.apk --title "Mon Budget (dernière version)" --notes "APK installable. Lien fixe : releases/latest/download/mon-budget.apk"
